@@ -1,0 +1,186 @@
+﻿@model List<Preguntado.Models.ViewModel.categoria.ViewModelGrillaCategoria>
+
+@{
+    ViewBag.Title = "Listado de Peliculas";
+}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="page-layout carded full-width single-scroll">
+
+    <div class="top-bg bg-deep-purple-100 "></div>
+
+    <!-- CONTENT -->
+    <div class="page-content-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+
+            <!-- APP TITLE -->
+            <div class="col-12 col-sm">
+
+                <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+
+                    <div class="logo-text">
+                        <div class="h4">Listado de Categoria</div>
+                    </div>
+                </div>
+            </div>
+            <!-- SEARCH -->
+            <div class="col search-wrapper px-2">
+
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-icon">
+                            <i class="icon icon-magnify"></i>
+                        </button>
+                    </span>
+                    <input id="cliente-search-input" type="text" class="form-control" placeholder="Buscar" aria-label="Search" />
+                </div>
+
+
+                <!-- / SEARCH -->
+
+            </div>
+            <!-- / APP TITLE -->
+            <div class="col-auto">
+                <a href="/Categoria/Create" class="btn btn-light">NUEVA CATEGORIA</a>
+            </div>
+           
+        </div>
+        <!-- / HEADER -->
+
+        <div class="page-content-card p-10">
+
+            <table id="cliente-data-table" class="table">
+                <thead>
+                    <tr>
+                        <th class="secondary-text">
+                            <div class="table-header">
+                                <span class="column-title">Nombre</span>
+                            </div>
+                        </th>
+                        <th class="secondary-text">
+                            <div class="table-header">
+                                <span class="column-title">color</span>
+                            </div>
+                        </th>
+                        <th class="secondary-text">
+                            <div class="table-header">
+                                <span class="column-title">CantidadPreguntas</span>
+                            </div>
+                        </th>
+                       
+                        <th class="secondary-text">
+                            <div class="table-header">
+                                <span class="column-title">Acciones</span>
+                            </div>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @(item.Nombre)
+                            </td>
+                            <td>
+                                @(item.Color)
+                            </td>
+                            <td>
+                                @(item.cantidadPreguntas)
+                            </td>
+                            
+                            <td>
+                                <a href="@Url.Action("Edit", "Categoria", new { id = item.Id})" class="btn btn-icon fuse-ripple-ready" aria-label="Edit" data-toggle="tooltip" data-placement="top" data-original-title="Editar">
+                                    <i class="icon icon-pencil s-6"></i>
+                                </a>
+                                
+                                <button na id=@(item.Id) type="button" class="btn btn-icon fuse-ripple-ready delete-action"
+                                        aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar">
+                                    <i class="icon icon-delete s-6"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $(".delete-action").click(function () {
+                var id = $(this).attr("id")
+                var name = "noOk";
+
+                console.log(id);
+                swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this imaginary file!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("Delete", "Categoria")',
+                            data: { Id: id },
+                                success: function (data) {
+                                    window.location.href = '@Url.Action("Index", "Pelicula")';
+                                    //window.location.reload();
+                            }
+                            })
+                            swal("Poof! Your imaginary file has been deleted!", {
+                                icon: "success",
+                            });
+                        } else {
+                            swal("Your imaginary file is safe!");
+                        }
+                    });
+
+
+     });
+
+        });
+    </script>
+    @*<script src="~/Scripts/DataTableInitiator.js"></script>
+        <script>
+                /// <reference path="../../Scripts/DataTableInitiator.js" />
+            $(document).ready(function () {
+
+
+                DataTableInitiator("cliente-data-table","cliente-search-input", "@Url.Action("Delete", new { id = this. })/", " la pelicula");
+                })
+        </script>
+
+        @if (!string.IsNullOrEmpty(Request.Params["result"]))
+        {
+            <script>
+                swal("Buen trabajo!", "El cliente ha sido registrado", "success");
+            </script>
+        }
+        @if (Request.Params["Message"] == "UpdateError")
+        {
+            <script>
+                swal("No se realizo la modificación.", "Revise los campos obligatorios del formulario.", "warning");
+            </script>
+        }*@
+
+}
+
+
