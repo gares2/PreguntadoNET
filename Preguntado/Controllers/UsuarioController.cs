@@ -12,6 +12,7 @@ using Preguntado.Models.Enums;
 
 namespace Preguntado.Controllers
 {
+    [Authorize]
     public class UsuarioController : Controller
     {
         private ApplicationUserManager _userManager;
@@ -52,11 +53,13 @@ namespace Preguntado.Controllers
                 _signInManager = value;
             }
         }
+        [Authorize(Roles = RoleConst.Administrador)]
         public ActionResult Create()
         {
             var model = new  ViewModelAbmUsuario();
             return View(model);
         }
+        [Authorize(Roles = RoleConst.Administrador)]
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> Edit(ViewModelAbmUsuario model)
         {
@@ -96,6 +99,8 @@ namespace Preguntado.Controllers
             }
             return View(model);
         }
+
+        [Authorize(Roles = RoleConst.Administrador)]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -135,6 +140,7 @@ namespace Preguntado.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = RoleConst.Administrador)]
         public ActionResult Edit(Guid id)
         {
             var usuario = new Repositorio<Usuario>(db).Traer(id);
@@ -143,6 +149,7 @@ namespace Preguntado.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = RoleConst.Administrador)]
         [HttpPost]
         public ActionResult Delete(Guid Id)
         {

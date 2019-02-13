@@ -198,6 +198,7 @@
     <Compile Include="Controllers\CategoriaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PRController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,10 +208,16 @@
     <Compile Include="Migrations\201902081325150_test1.Designer.cs">
       <DependentUpon>201902081325150_test1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902111650002_PR.cs" />
+    <Compile Include="Migrations\201902111650002_PR.Designer.cs">
+      <DependentUpon>201902111650002_PR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Dominio\Categoria.cs" />
     <Compile Include="Models\Dominio\Entidad.cs" />
+    <Compile Include="Models\Dominio\Pregunta.cs" />
+    <Compile Include="Models\Dominio\Respuesta.cs" />
     <Compile Include="Models\Dominio\Usuario.cs" />
     <Compile Include="Models\Enums\Colores.cs" />
     <Compile Include="Models\Enums\RoleConst.cs" />
@@ -224,6 +231,10 @@
     <Compile Include="Models\Validations\ListHasElements.cs" />
     <Compile Include="Models\ViewModel\categoria\ViewModelABMCategoria.cs" />
     <Compile Include="Models\ViewModel\categoria\ViewModelGrillaCategoria.cs" />
+    <Compile Include="Models\ViewModel\RP\FiltroRPViewModel.cs" />
+    <Compile Include="Models\ViewModel\RP\ViewModelRP.cs" />
+    <Compile Include="Models\ViewModel\RP\ViewModelRPGrilla.cs" />
+    <Compile Include="Models\ViewModel\RP\ViewModelsRespuesta.cs" />
     <Compile Include="Models\ViewModel\ViewModelAbmUsuario.cs" />
     <Compile Include="Models\ViewModel\ViewModelGrillaUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -8060,6 +8071,9 @@
     <Content Include="Views\Categoria\Index.cshtml" />
     <Content Include="Views\Categoria\Edit.cshtml" />
     <Content Include="Views\Categoria\Create.cshtml" />
+    <Content Include="Views\PR\Create.cshtml" />
+    <Content Include="Views\PR\Index.cshtml" />
+    <Content Include="Views\PR\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -8131,6 +8145,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201902081325150_test1.resx">
       <DependentUpon>201902081325150_test1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902111650002_PR.resx">
+      <DependentUpon>201902111650002_PR.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

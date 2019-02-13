@@ -52,7 +52,7 @@
 
         <div class="page-content-card p-10">
 
-            <table id="cliente-data-table" class="table">
+            <table id="cliente-data-table"   class="table">
                 <thead>
                     <tr>
                         <th class="secondary-text">
@@ -88,9 +88,9 @@
                             <td>
                                 @(item.Nombre)
                             </td>
-                            <td>
-                                @(item.Color)
-                            </td>
+                            <td   >
+                                <input readonly style="background-color :@(item.Color) " />
+                               </td>
                             <td>
                                 @(item.cantidadPreguntas)
                             </td>
@@ -141,7 +141,7 @@
                                 url: '@Url.Action("Delete", "Categoria")',
                             data: { Id: id },
                                 success: function (data) {
-                                    window.location.href = '@Url.Action("Index", "Pelicula")';
+                                    window.location.href = '@Url.Action("Index", "Categoria")';
                                     //window.location.reload();
                             }
                             })
@@ -152,7 +152,6 @@
                             swal("Your imaginary file is safe!");
                         }
                     });
-
 
      });
 

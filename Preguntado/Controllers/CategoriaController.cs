@@ -9,9 +9,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Preguntado.Models.ViewModel;
 using Microsoft.AspNet.Identity;
 using Preguntado.Models.ViewModel.categoria;
-
+using Preguntado.Models.Enums;
 namespace Preguntado.Controllers
 {
+    [Authorize]
     public class CategoriaController : Controller
     {
         // GET: Categoria
@@ -34,13 +35,13 @@ namespace Preguntado.Controllers
             }
             return View(model);
         }
-
+        [Authorize(Roles = RoleConst.Administrador)]
         public ActionResult Create()
         {
             var model = new ViewModelABMCategoria();
             return View(model);
         }
-
+        [Authorize(Roles = RoleConst.Administrador)]
         [HttpPost]
         public ActionResult Create(ViewModelABMCategoria model)
         {
@@ -54,7 +55,7 @@ namespace Preguntado.Controllers
             }
             return View(model);
         }
-
+        [Authorize(Roles = RoleConst.Administrador)]
         public ActionResult Edit(Guid id)
         {
             var cate = new Repositorio<Categoria>(db).Traer(id);
@@ -63,6 +64,8 @@ namespace Preguntado.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = RoleConst.Administrador)]
+        [HttpPost]
         public ActionResult Edit(ViewModelABMCategoria model)
         {
             if (ModelState.IsValid)
@@ -77,7 +80,21 @@ namespace Preguntado.Controllers
             }
             return View(model);
         }
+        [Authorize(Roles = RoleConst.Administrador)]
+        [HttpPost]
+        public ActionResult Delete(Guid Id)
+        {
+            //if (ModelState.IsValid)
+            //{
+            var repo = new Repositorio<Categoria>(db);
+            var cate = repo.Traer(Id);
+            repo.Eliminar(cate);
 
+            return Json(new { Id = Id }, JsonRequestBehavior.AllowGet);
+
+            //}
+            //return View(model);
+        }
 
     }
 }

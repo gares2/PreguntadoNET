@@ -1,0 +1,343 @@
+﻿@model Preguntado.Models.ViewModel.RP.ViewModelRP
+
+<div class="page-layout carded full-width single-scroll">
+
+    <div class="top-bg bg-deep-purple-100 "></div>
+
+    <!-- CONTENT -->
+    <div class="page-content-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+
+            <!-- APP TITLE -->
+            <div class="col-12 col-sm">
+
+                <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+
+                    <div class="logo-text">
+                        <div class="h4">Editar Preguntas Respuestas</div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <div class="page-content-card p-10">
+
+            @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+            <div class="form-row mt-2">
+                <div class="col-md-6 form-group">
+                    <input id="Nombre" name="Nombre" class="form-control" type="text" value="@Model.Nombre" />
+                    @Html.LabelFor(m => m.Nombre, new { @class = "label" })
+                    @* <label for="Name" class="col-form-label">Nombre</label>*@
+                    <div class="invalid-feedback">
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 form-group">
+                    <label for="Name" class="col-form-label">Categoria</label>
+                    <select id="CategoriaSeleccionada" name="CategoriaSeleccionada">
+                        <option value="@Guid.Empty">-</option>
+                        @foreach (var catego in Model.CategoriasDisponibles)
+                        {
+                            <option @(catego.Id == Model.CategoriaSeleccionada ? "selected" : "") value="@catego.Id">@catego.Nombre</option>
+                        }
+                    </select>
+                    @*<div class="invalid-feedback">
+                            @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "text-danger" })
+                        </div>*@
+                </div>
+
+
+                <div class="col-md-12">
+                    <button id="btnNuevoResp" class="btn btn-default">Nueva Respuesta</button>
+                    <table id="tablaRespuesta" class="table table-responsive">
+                        <tr>
+                            <th>Respuesta</th>
+                            <th>Es Correcta</th>
+                            <th>Comandos</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="alert alert-danger" id="errorDiv" style="display:none">
+            </div>
+
+            <div class="row mt-5 pt-5 pb-5 mb-5 d-flex justify-content-center">
+                <div class="col-6 col-md-3">
+                    <button id="btnGuardarPR" type="submit" class="btn bg-deep-orange text-white btn-block">Guardar</button>
+                </div>
+            </div>
+
+            <div class="row mt-5 mb-10 d-flex justify-content-center">
+                <div class="col-6 col-md-3">
+                    <br /><br /><br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">Crear Respuesta</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Respuesta</label> <input style="max-width: 100%; min-width: 100%;" type="text" id="nombreRes" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Es correcta </label>
+                        <input id="esCorrecta" type="checkbox" name="gender" value="esCorrecta">
+                    </div>
+                    <div class="alert alert-danger" id="errorDivModal" style="display:none">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary btnGuardarRespuesta">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var Respuestas = [];
+            var idNac = 1;
+            var id = '@Model.Id'; 
+            var correcta;
+            var nuevo = false;
+            var Pregunta = {
+                Nombre: $("#Nombre").val(),
+                categoriaSeleccionado: $("#CategoriaSeleccionado").val(),
+                ActoresSeleccionadas: Respuestas
+            }
+
+            $.ajax({
+                        type: "GET",
+                            url: '@Url.Action("EditJSJason", "PR")',
+                            data: { Id: id, model: Pregunta  },
+                            success: function (data) {
+                                //console.log(data);
+
+                                $("#Nombre").val(data.model.Nombre);
+
+                                for (j = 0; j < data.model.CategoriaSeleccionada.length; j++){
+                                    if (data.model.CategoriaSeleccionada[j].Id == data.model.CategoriaSeleccionada)
+                                        $("#CategoriaSeleccionada").append("<option selected=" + "selected" + " value=" + data.model.CategoriaSeleccionada + ">" + data.model.CategoriaSeleccionada[j].Nombre + "</option>");
+                                    else
+                                        $("#CategoriaSeleccionada").append("<option value=" + data.model.CategoriaSeleccionada[j].Id + ">" + data.model.CategoriaSeleccionada[j].Nombre  + "</option>");
+                                }
+                                Respuestas = data.model.RespuestasSeleccionadas;
+                                Pregunta.CategoriaSeleccionada = data.model.CategoriaSeleccionada;
+
+                                for (j = 0; j < data.model.RespuestasSeleccionadas.length; j++) {
+
+                                    idNac = idNac + 1;
+                                        //var fecha = (data.model.ActoresSeleccionadas[j].FechaNac === undefined) ? '' : ToJavaScriptDate(data.model.ActoresSeleccionadas[j].FechaNac);
+                                        
+                                        //var fecha = (data.model.ActoresSeleccionadas[j].FechaNac === undefined) ? '' : ToJavaScriptDate(data.model.ActoresSeleccionadas[j].FechaNac);
+
+                                     // var fecha = (data.model.ActoresSeleccionadas[j].FechaNac === undefined) ? '' : fechaN;
+                                         @*<a href="@Url.Action("EditJs", "Pelicula", new { id = item.Id})" class="btn btn-icon fuse-ripple-ready" aria-label="EditJs" data-toggle="tooltip" data-placement="top" data-original-title="EditarJs">
+                                    <i class="icon icon-pencil s-6"></i>*@
+                                //</a>($('input[name=gender]').is(":checked") ? "SI" : "NO")
+                                    correcta = data.model.RespuestasSeleccionadas[j].EsCorrecta == true ? "SI" : "NO";
+                                    var row = '<tr id="row' + data.model.RespuestasSeleccionadas[j].IdJs + '"> <td name="Nombre" >' + data.model.RespuestasSeleccionadas[j].Nombre + '</td> <td name="ESCORRECTA">' + correcta + '</td> <td>  <a name="' + data.model.RespuestasSeleccionadas[j].IdJs + '" class="btn btn-icon fuse-ripple-ready EditarRespuesta" aria-label="EditRespuesta" data-toggle="tooltip" data-placement="top" data-original-title="EditarRespuesta">  <i name="' + data.model.RespuestasSeleccionadas[j].IdJs + '" class="icon icon-pencil s-6 "></i> <button id="' + data.model.RespuestasSeleccionadas[j].IdJs + '" type="button" class="btn btn-icon fuse-ripple-ready btnEliminarRespuestas" aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar"> <i class="icon icon-delete s-6"></i> </button>  </td>  </tr>';
+                                    $("#tablaRespuesta").append(row);
+                                    refrescarClicksEliminarRespuestas();
+                                    refrescarClicksEditarRespuesta();
+                                }
+
+                            @*if (data.Result == "OK")
+                                window.location.href = '@Url.Action("Index", "Pelicula")';
+                            else
+                            {
+                                var html = '<ul>';
+                                for (i = 0; i < data.Error.length; i++) {
+                                    html += '<li>' + data.Error[i] + '</li>'
+                                }
+                                html += '</ul>'
+                                $("#errorDiv").html(html);
+                                $("#errorDiv").fadeIn();*@
+                        }
+            });
+            function refrescarClicksEliminarRespuestas() {
+                $(".btnEliminarRespuestas").off();
+                $(".btnEliminarRespuestas").click(function () {
+                    var id = $(this).attr('id');
+
+                    for (j = 0; j < Respuestas.length; j++) {
+                        if (Respuestas[j].IdJs == id) {
+                            //Respuestas.splice(j, 1); //remover del array un elemento de la posicion j
+                            Respuestas[j].Eliminado = true;
+                            break;
+                        }
+                    }
+
+                    $("#row" + id).remove();
+                });
+            } 
+            function refrescarClicksEditarRespuesta() {
+                $(".EditarRespuesta").off();
+                $(".EditarRespuesta").click(function () {
+                    var id = $(this).attr('name');
+
+                    for (j = 0; j < Respuestas.length; j++) {
+                        if (Respuestas[j].IdJs == id) {
+                            idactorselected = id;
+                            $("#nombreRes").val(Respuestas[j].Nombre);
+                            //$("#FechaNac").val(ToJavaScriptDate(actores[j].FechaNac));
+                            $('#esCorrecta').prop('checked', (Respuestas[j].EsCorrecta));
+                            //$("#esCorrecta").selected(true);
+                            //remover del array un elemento de la posicion 
+                            nuevo = false;
+                            break;
+                        }
+                    }
+                    // esta variable determina si genero un nuevo actor o edito un actor 
+                    $("#exampleModal").modal('show');
+                    $(".modal-backdrop").hide();
+                    //$("#row" + id).remove();
+                });
+            }
+            $("#btnNuevoResp").click(function () {
+                $("#nombreRes").val('');
+                //$("#FechaNac").val('');
+                //$('#esCorrecta').removeAttr('checked');
+                nuevo = true;
+
+                $("#esCorrecta").prop('checked', false);
+                $("#exampleModal").modal('show');
+                $(".modal-backdrop").hide();
+            });
+
+            $(".btnGuardarRespuesta").click(function () {
+                var html = ''
+
+                $("#errorDivModal").html(html);
+                $("#errorDivModal").hide();
+
+                  // $('input[name=q12_3]').is(":checked");
+
+                if ($.trim($("#nombreRes").val()) == '')
+                {
+                    html = '<ul>';
+                    html += '<li>' + "Debe completar el Nombre" + '</li>'
+                    html += '</ul>'
+                }
+
+                for (j = 0; j < Respuestas.length; j++) {
+                    if (Respuestas[j].esCorrecta == 'SI') {
+                        html = '<ul>';
+                        html += '<li>' + "Solo esta permitido un respuesta correcta" + '</li>'
+                        html += '</ul>'
+                    }
+                }
+
+                if ($.trim(html) != '') {
+                    $("#errorDivModal").html(html);
+                    $("#errorDivModal").fadeIn();
+                }
+                else {
+                    $("#errorDivModal").hide();
+                    if (nuevo == false) {
+                        for (j = 0; j < Respuestas.length; j++) {
+                            if (Respuestas[j].IdJs == idactorselected) {
+                                var respuesta = {
+                                    Nombre: $("#nombreRes").val(),
+                                    EsCorrecta: $('input[name=gender]').is(":checked"),
+                                    IdJs: Respuestas[j].IdJs,
+                                    Id: Respuestas[j].Id,
+                                    Eliminado: false
+                                };
+                                Respuestas[j] = respuesta;
+                                //row = " <td>'" + actor.Nombre + '</td> <td>' + actor.FechaNac + '</td> <td> <a name="' + actor.IdJs + '" class="btn btn-icon fuse-ripple-ready EditarActor" aria-label="EditActor" data-toggle="tooltip" data-placement="top" data-original-title="EditarActor">  <i name="' + actor.IdJs + '" class="icon icon-pencil s-6 "></i> <button id="' + actor.IdJs + '" type="button" class="btn btn-icon fuse-ripple-ready btnEliminarActor" aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar"> <i class="icon icon-delete s-6"></i> </button>  </td>';
+                                //$("#row" + actor.IdJs).find("td").html(row);
+
+                                //$("ul").find("td[name='" + "Nombre" + "']");
+
+                                $("#row" + respuesta.IdJs).find("td[name='" + "Nombre" + "']").html(respuesta.Nombre);
+                                $("#row" + respuesta.IdJs).find("td[name='" + "ESCORRECTA" + "']").html((respuesta.EsCorrecta==true ? "SI" : "NO"));
+                                //remover del array un elemento de la posicion j
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        var resp = {
+                            Nombre: $("#nombreRes").val(),
+                            EsCorrecta: ($('input[name=gender]').is(":checked") ? true : false),
+                            correcta: ($('input[name=gender]').is(":checked") ? "SI" : "NO"),
+                            IdJs: idNac
+                        };
+
+                        idNac = idNac + 1;
+                        Respuestas.push(resp);
+                        //var row = '<tr id="row' + data.model.RespuestasSeleccionadas[j].IdJs + '"> <td name="Nombre" >' + data.model.RespuestasSeleccionadas[j].Nombre + '</td> <td name="ESCORRECTA">' + correcta + '</td> <td>  <a name="' + data.model.RespuestasSeleccionadas[j].IdJs + '" class="btn btn-icon fuse-ripple-ready EditarRespuesta" aria-label="EditRespuesta" data-toggle="tooltip" data-placement="top" data-original-title="EditarRespuesta">  <i name="' + data.model.RespuestasSeleccionadas[j].IdJs + '" class="icon icon-pencil s-6 "></i> <button id="' + data.model.RespuestasSeleccionadas[j].IdJs + '" type="button" class="btn btn-icon fuse-ripple-ready btnEliminarRespuesta" aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar"> <i class="icon icon-delete s-6"></i> </button>  </td>  </tr>';
+
+                      //var row = '<tr id="row' + resp.IdJs + '"> <td name="Nombre" >' + resp.Nombre + '</td> <td name="ESCORRECTA" >' + resp.correcta  + '</td> <td>  <a name="' + resp.IdJs + '" class="btn btn-icon fuse-ripple-ready EditarRespuesta" aria-label="EditRespuesta" data-toggle="tooltip" data-placement="top" data-original-title="EditarRespuesta">  <i name="' + resp.IdJs + '" class="icon icon-pencil s-6 "></i> <button id="' + resp.IdJs + '" type="button" class="btn btn-icon fuse-ripple-ready btnEliminarRespuesta" aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar"> <i class="icon icon-delete s-6"></i> </button>  </td>  </tr>';
+                        var row = '<tr id="row' + resp.IdJs + '"> <td name="Nombre" >' + resp.Nombre + '</td> <td name="ESCORRECTA" >' + resp.correcta + '</td> <td>  <a name="' + resp.IdJs + '" class="btn btn-icon fuse-ripple-ready EditarRespuesta" aria-label="EditRespuesta" data-toggle="tooltip" data-placement="top" data-original-title="EditarRespuesta">  <i name="' + resp.IdJs + '" class="icon icon-pencil s-6 "></i> <button id="' + resp.IdJs + '" type="button" class="btn btn-icon fuse-ripple-ready btnEliminarRespuestas" aria-label="Product details" data-toggle="tooltip" data-placement="top" data-original-title="Borrar"> <i class="icon icon-delete s-6"></i> </button>  </td>  </tr>';
+                        $("#tablaRespuesta").append(row);
+
+                    }
+                    refrescarClicksEliminarRespuestas();
+                    refrescarClicksEditarRespuesta();
+                    $("#exampleModal").modal('hide');
+                }
+            });
+            $("#btnGuardarPR").click(function () {
+                $("#errorDiv").hide();
+                var pregunta = {
+                    Nombre: $("#Nombre").val(),
+                    //Duracion: $("#duracion").val(),
+                    CategoriaSeleccionada: $("#CategoriaSeleccionada").children("option:selected").val(),
+                    RespuestasSeleccionadas: Respuestas,
+                    Id: id
+                };
+
+                 $.ajax({
+                        type: "POST",
+                         url: '@Url.Action("EditJSJason", "PR")',
+                         data: { model: pregunta },
+                        success: function (data) {
+                            console.log(data);
+
+                            if (data.Result == "OK")
+                                window.location.href = '@Url.Action("Index", "PR")';
+                            else {
+                                var html = '<ul>';
+                                for (i = 0; i < data.Error.length; i++) {
+                                    html += '<li>' + data.Error[i] + '</li>'
+                                }
+                                html += '</ul>'
+                                $("#errorDiv").html(html);
+                                $("#errorDiv").fadeIn();
+
+                            }
+                        }
+                    });
+
+            });
+
+
+        });
+    </script>
+}
+
+

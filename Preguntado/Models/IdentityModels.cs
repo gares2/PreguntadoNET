@@ -32,5 +32,8 @@ namespace Preguntado.Models
 
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Pregunta> Preguntas { get; set; }
+        public DbSet<Respuesta> Respuestas { get; set; }
+
     }
 }
