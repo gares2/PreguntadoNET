@@ -10,6 +10,7 @@ using Preguntado.Models.ViewModel;
 using Microsoft.AspNet.Identity;
 using Preguntado.Models.ViewModel.categoria;
 using Preguntado.Models.Enums;
+using Preguntado.Helper;
 namespace Preguntado.Controllers
 {
     [Authorize]
@@ -51,6 +52,9 @@ namespace Preguntado.Controllers
             {
                 var cate = new Categoria(model, db);
                 new Repositorio<Categoria>(db).Crear(cate);
+
+                LoggerEventos.LogearEvento("Crear Categoria: " + cate.Nombre, User.Identity.GetUserId(), cate.Id, AccionesLogEnum.Crear, EntidadLogEnum.Categoria);
+
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -61,7 +65,7 @@ namespace Preguntado.Controllers
             var cate = new Repositorio<Categoria>(db).Traer(id);
 
             var model = new ViewModelABMCategoria(cate);
-
+            
             return View(model);
         }
         [Authorize(Roles = RoleConst.Administrador)]

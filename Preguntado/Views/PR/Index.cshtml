@@ -48,16 +48,15 @@
         <div class="page-content-card p-10">
             @if (User.IsInRole("Administrador") == true)
             {
-
                 <div class="form-row mt-2">
                     <div class="col-md-6 form-group">
                         <input id="Nombre" name="Nombre" class="form-control" type="text" value="" />
                         <label for="Name" class="col-form-label">Nombre</label>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <label for="Name" class="col-form-label">Categoria</label>
-                        <select id="CategoriaSeleccionado" name="CategoriaSeleccionado">
-                            <option value="@Guid.Empty">-</option>
+                    <div class="col-md-6 form-group" style="z-index:1">
+                        @*<label for="Name" class="col-form-label">Categoria</label>*@
+                        <select  class="chosen-select"   id="CategoriaSeleccionado" name="CategoriaSeleccionado">
+                            <option value="@Guid.Empty">Seleccionar Categoria</option>
                             
                             @foreach (var categoria in Model.CategoriaDisponibles)
                             {
@@ -69,8 +68,6 @@
                             </div>*@
                     </div>
                 </div>
-                
-
                             <div class="form-row mt-2 justify-content-center" style="text-align:center;width:100%">
                                 <button class="btn btn-primary" id="btnFiltrar">Filtrar</button>
                             </div>

@@ -1,0 +1,131 @@
+﻿@model List<Preguntado.Models.ViewModel.Jugar.JuegoPRViewModel>
+@{
+    ViewBag.Title = "Listado de Peliculas";
+}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<div class="page-layout carded full-width single-scroll">
+
+    <div class="top-bg bg-deep-purple-100 "></div>
+
+    <!-- CONTENT -->
+    <div class="page-content-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+
+            <!-- APP TITLE -->
+            <div class="col-12 col-sm">
+
+                <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+
+                    <div class="logo-text">
+                        <div class="h4">Resultado</div>
+                    </div>
+                </div>
+            </div>
+            <!-- SEARCH -->
+            <div class="col search-wrapper px-2">
+
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-icon">
+                            <i class="icon icon-magnify"></i>
+                        </button>
+                    </span>
+                    <input id="cliente-search-input" type="text" class="form-control" placeholder="Buscar" aria-label="Search" />
+                </div>
+                <!-- / SEARCH -->
+            </div>
+            <div class="col-auto">
+                <a href="/Jugar/Index" class="btn btn-light">Volver a Jugar </a>
+            </div>
+        </div>
+        <!-- / HEADER -->
+
+        <div class="page-content-card p-10">
+@{
+    int i = 0;
+    <div class="form-row mt-2 justify-content-center" >
+        <div class="table-header justify-content-center" style="font-size:25px; text-align: center;">
+            <span class="column-title justify-content-center">Resultados</span>
+        </div>
+        </div>
+        <div class="form-row mt-2">
+            <table id="cliente-data-table" class="table">
+                <thead>
+                    <tr>
+
+                        @*<td class="secondary-text " align="center" valign="middle">
+                                <div class="table-header justify-content-center" style="font-size:25px;">
+                                    <span class="column-title justify-content-center">Resultados</span>
+                                </div>
+                            </td>*@
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr style="align-content:center">
+                        @foreach (var item in Model)
+                        {
+
+                            <td class="secondary-text " align="center" valign="middle">
+                                <div class="table-header justify-content-center" style="font-size:17px;">
+                                    <span class="column-title justify-content-center">@item.Nombre</span>
+                                </div>
+
+                                <table class="table">
+
+                                    @foreach (var item2 in item.RespuestaDisponibles)
+                                    {
+                                        <tr>
+                                            <td align="center">
+                                                 @if (item2.esCorrecta == true)
+                                                 {
+                                                    <a class="btn btn-block btn-success" aria-label="Play" data-toggle="tooltip" data-placement="top" data-original-title="Play">
+
+                                                        <i class="icon icon-account-check s-6"></i>@(item2.Nombre)
+                                                    </a>
+                                                     if (item.RespSeleccionada == item2.Id)
+                                                     { i++; }
+                                                 }
+                                                 else
+                                                 {
+                                                     if (item.RespSeleccionada == item2.Id)
+                                                     {
+                                                            <a class="btn btn-block btn-danger" aria-label="Play" data-toggle="tooltip" data-placement="top" data-original-title="Play">
+                                                                <i class="icon icon-account-remove s-6"></i>@(item2.Nombre)
+                                                            </a>
+                                                    }
+                                                    else
+                                                    { <a class="btn btn-block " aria-label="Play" data-toggle="tooltip" data-placement="top" data-original-title="Play">
+                                                         @(item2.Nombre)
+                                                       </a>
+                                                    }
+                                                 }
+
+                                                </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+
+                        }
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-row mt-2">
+            <div class="col-12 col-sm justify-content-center" style="font-size:25px;    text-align: center;">
+                <span class="column-title justify-content-center"> Preguntas correctas  @i de  @Model.Count   </span>
+            </div>
+        </div>
+
+        }
+    </div>
+
+    </div>
+</div>

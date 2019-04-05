@@ -8,6 +8,12 @@ namespace Preguntado.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpPost]
+        public ActionResult Post()
+        {
+            return Json("ok", JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Index()
         {
             return View();

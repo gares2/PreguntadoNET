@@ -34,6 +34,8 @@ namespace Preguntado.Models
         public DbSet<Categoria> Categoria { get; set; }
         public DbSet<Pregunta> Preguntas { get; set; }
         public DbSet<Respuesta> Respuestas { get; set; }
-
+        public DbSet<JuegoHistory> JuegoHistory { get; set; }
+        public DbSet<LogEvento> LogEvento { get; set; }
+        public DbSet<Localizacion> Localizacion { get; set; }
     }
 }

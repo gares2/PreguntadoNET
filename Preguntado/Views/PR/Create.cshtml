@@ -31,7 +31,7 @@
 
             @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
             <div class="form-row mt-2">
-                <div class="col-md-6 form-group">
+                <div class="col-md-8 form-group">
                     <input id="Nombre" name="Nombre" class="form-control" type="text" value="@Model.Nombre" />
                     @Html.LabelFor(m => m.Nombre, new { @class = "label" })
                     @* <label for="Name" class="col-form-label">Nombre</label>*@
@@ -40,10 +40,10 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 form-group">
-                    <label for="Name" class="col-form-label">Categoria</label>
-                    <select  id="CategoriaSeleccionada" name="CategoriaSeleccionada" >
-                        <option value="@Guid.Empty">-</option>
+                <div class="col-md-4 form-group" style="z-index:1" >
+                    @*<label for="Name" class="col-form-label">Categoria</label>*@
+                    <select class="chosen-select" data-placeholder="Elegija su categoria" id="CategoriaSeleccionada" name="CategoriaSeleccionada" >
+                        <option value="@Guid.Empty">Elegi tu categoria</option>
                         @foreach (var catego in Model.CategoriasDisponibles)
                         {  
                             <option @(catego.Id == Model.CategoriaSeleccionada ? "selected" : "") value="@catego.Id">@catego.Nombre</option>
@@ -110,8 +110,8 @@
             </div>
         </div>
     </div>
-
 </div>
+
 
 
 @section Scripts {
@@ -120,7 +120,7 @@
         $(document).ready(function () {
             var Respuestas = [];
             var idNac = 1;
-        
+
             function refrescarClicksEliminarRespuestas() {
                 $(".btnEliminarRespuestas").off();
                 $(".btnEliminarRespuestas").click(function () {
@@ -132,10 +132,11 @@
                             break;
                         }
                     }
-
                     $("#row" + id).remove();
                 });
             }
+
+
 
             $("#btnNuevoResp").click(function () {
                 $("#nombreRes").val('');
@@ -151,8 +152,9 @@
 
                 $("#errorDivModal").html(html);
                 $("#errorDivModal").hide();
-
+                    
                   // $('input[name=q12_3]').is(":checked");
+
 
                 if ($.trim($("#nombreRes").val()) == '')
                 {

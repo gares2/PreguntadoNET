@@ -172,10 +172,8 @@ namespace Preguntado.Controllers
             repo.Eliminar(pregunta);
 
             return Json(new { Id = Id }, JsonRequestBehavior.AllowGet);
-
             //}
             //return View(model);
-
         }
         [Authorize(Roles = RoleConst.Administrador)]
         [HttpPost]

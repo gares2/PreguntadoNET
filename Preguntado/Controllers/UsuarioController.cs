@@ -107,12 +107,14 @@ namespace Preguntado.Controllers
         public async System.Threading.Tasks.Task<ActionResult> Create(ViewModelAbmUsuario model)
         {
             //ModelState.AddModelError("FechaNacimiento", "La fecha no es válida");
-
+            var errores = new List<string>();
             if (ModelState.IsValid)
             {
                 var usuario = new Usuario(model, db);
 
                 //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var alluser = new Repositorio<Usuario>(db).TraerTodos();
+
 
                 //var usuario = new Usuario()
                 //{
@@ -121,19 +123,29 @@ namespace Preguntado.Controllers
                 //};
 
                 //var db = new ApplicationDbContext();
-                new Repositorio<Usuario>(db).Crear(usuario);
 
-                UserManager.AddPassword(usuario.ApplicationUser.Id, model.Password);
-                string rol;
-                foreach (Guid item in model.RolesSeleccionadas)
+                // if (model.CategoriaSeleccionada == Guid.Empty)
+                if (alluser.Where(x => x.ApplicationUser.Email == usuario.ApplicationUser.Email).ToList().Count >= 1)
                 {
-                    rol = model.RolesDisponibles.Where(x => x.Id == item).Select(x => x.Nombre).FirstOrDefault();
-                    UserManager.AddToRole(usuario.ApplicationUser.Id, rol);
+                    errores.Add("No puede haber dos mails iguales");
+                    model.Errors = errores;
+                    return View(model);
                 }
-             
-                await SignInManager.SignInAsync(usuario.ApplicationUser, isPersistent: false, rememberBrowser: false);
-                return RedirectToAction("Index", "Usuario");
+                else
+                {
+                    new Repositorio<Usuario>(db).Crear(usuario);
 
+                    UserManager.AddPassword(usuario.ApplicationUser.Id, model.Password);
+                    string rol;
+                    foreach (Guid item in model.RolesSeleccionadas)
+                    {
+                        rol = model.RolesDisponibles.Where(x => x.Id == item).Select(x => x.Nombre).FirstOrDefault();
+                        UserManager.AddToRole(usuario.ApplicationUser.Id, rol);
+                    }
+
+                    await SignInManager.SignInAsync(usuario.ApplicationUser, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", "Usuario");
+                }
                 //new Repositorio<Actor>(db).Crear(actor);
                 //return RedirectToAction("Index");
             }

@@ -7,13 +7,13 @@ namespace Preguntado.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class test1 : IMigrationMetadata
+    public sealed partial class fix_migrations : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(test1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(fix_migrations));
         
         string IMigrationMetadata.Id
         {
-            get { return "201902081325150_test1"; }
+            get { return "201903272149414_fix_migrations"; }
         }
         
         string IMigrationMetadata.Source

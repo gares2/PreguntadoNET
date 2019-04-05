@@ -33,18 +33,18 @@
             @using (Html.BeginForm("Create", "Categoria", FormMethod.Post, new { @id = "form" }))
             {
 
-                @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+               //@Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-row mt-2">
                     <div class="col-md-6 form-group">
                         <input id="Nombre" name="Nombre" class="form-control" type="text" value="@Model.Nombre" />
                         @Html.LabelFor(m => m.Nombre, new { @class = "label" })
                         @* <label for="Name" class="col-form-label">Nombre</label>*@
                         <div class="invalid-feedback">
-                            @Html.ValidationMessageFor(m => m.cantidadPreguntas, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="col-md-6 form-group">
-                        <input id="CantidadPreguntas" name="cantidadPreguntas" class="form-control" type="text" value="@Model.cantidadPreguntas" />
+                        <input id="cantidadPreguntas" name="cantidadPreguntas" class="form-control" type="text" value="@Model.cantidadPreguntas" />
                         @Html.LabelFor(m => m.cantidadPreguntas, new { @class = "label" })
                         @* <label for="Name" class="col-form-label">Nombre</label>*@
                         <div class="invalid-feedback">
@@ -55,7 +55,7 @@
 
                 <div class="form-row mt-2">
                     <div class="col-md-6 form-group">
-                        <input id="color" name="color" class="form-control" type="text" value="@Model.Color" />
+                        <input id="Color" name="Color" class="form-control" type="text" value="@Model.Color" />
                         @Html.LabelFor(m => m.Color, new { @class = "label" })
                         @* <label for="Name" class="col-form-label">Nombre</label>*@
                         <div class="invalid-feedback">

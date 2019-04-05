@@ -17,7 +17,31 @@
 
     <!-- Chosen.css -->
     <link href="~/assets/MaterialDesign/vendors/bower_components/chosen/chosen.css" rel="stylesheet">
+    @*<script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-135293763-1']);
+        _gaq.push(['_setDomainName', 'none']);
+        _gaq.push(['_setAllowLinker', 'true']);
+        _gaq.push(['_trackPageview']);
 
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.http://google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+
+
+    </script>*@
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135293763-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-135293763-1');
+    </script>
 
     <!-- STYLESHEETS -->
     <style type="text/css">
@@ -138,15 +162,16 @@
                             <span>CASHFLOW</span>
                         </li>
 
+                        @if (User.IsInRole(Preguntado.Models.Enums.RoleConst.Administrador))
+                        { 
+                            <li class="nav-item">
+                                <a class="nav-link ripple @(url.Equals("/Categoria/Index") ? "active" : "")" href="/Categoria/Index">
 
-                        <li class="nav-item">
-                            <a class="nav-link ripple @(url.Equals("/Categoria/Index") ? "active" : "")" href="/Categoria/Index">
+                                    <i class="icon s-4 icon-home"></i>
 
-                                <i class="icon s-4 icon-home"></i>
-
-                                <span>Categoria</span>
-                            </a>
-                        </li>
+                                    <span>Categoria</span>
+                                </a>
+                            </li>
 
                         <li class="nav-item">
                             <a class="nav-link ripple @(url.Equals("/Usuario/Index") ? "active" : "")" href="/Usuario/Index">
@@ -164,14 +189,19 @@
                                 <span>Pregunta Respuesta</span>
                             </a>
                         </li>
+                        }
+                       @if (User.IsInRole(Preguntado.Models.Enums.RoleConst.Suscriptor))
+                       {
                         <li class="nav-item">
-                            <a class="nav-link ripple @(url.Equals("/js/Index") ? "active" : "")" href="/js/Index">
+                            <a class="nav-link ripple @(url.Equals("/Jugar/Index") ? "active" : "")" href="/Jugar/Index">
 
                                 <i class="icon s-4 icon-home"></i>
 
-                                <span>js</span>
+                                <span>Jugar</span>
                             </a>
                         </li>
+                       }
+
 
                     </ul>
 
@@ -243,9 +273,6 @@
                                 </div>
 
                                 <div class="toolbar-separator"></div>
-
-
-
                                 <div class="toolbar-separator"></div>
 
                                 <button type="button" id="btnMensaje" class="quick-panel-button btn btn-icon avatar-wrapper" data-fuse-bar-toggle="quick-panel-sidebar">
@@ -265,19 +292,11 @@
 
                     @*
                         <div id="project-dashboard" class="page-layout simple right-sidebar">
-
                             <div class="page-content-wrapper custom-scrollbar">
-
-
-
-
                             </div>
-
-
                         </div>
 
                     *@
-
 
                 </div>
 

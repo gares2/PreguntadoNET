@@ -1,0 +1,161 @@
+﻿@model Preguntado.Models.ViewModel.Jugar.JuegoPRViewModel
+
+@{
+    ViewBag.Title = "Listado de Peliculas";
+}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+<div class="page-layout carded full-width single-scroll">
+
+    <div class="top-bg bg-deep-purple-100 "></div>
+
+    <!-- CONTENT -->
+    <div class="page-content-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+
+            <!-- APP TITLE -->
+            <div class="col-12 col-sm">
+
+                <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+
+                    <div class="logo-text">
+                        <div class="h4">Preguntas y Respuestas </div>
+                    </div>
+                </div>
+            </div>
+            <!-- SEARCH -->
+           <!-- <div class="col search-wrapper px-2">
+
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-icon">
+                            <i class="icon icon-magnify"></i>
+                        </button>
+                    </span>
+                    <input id="cliente-search-input" type="text" class="form-control" placeholder="Buscar" aria-label="Search" />
+                </div>
+
+
+                <!-- / SEARCH -->
+
+           <!-- </div>-->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <div class="page-content-card p-10" >
+            <div class="form-row mt-2 justify-content-center">
+                <div class="col-md-12 form-group justify-content-center ">
+                    <input id="Nombre" readonly name="Nombre" class="form-control justify-content-center" style="text-align:center" type="text" value="@Model.Nombre" />
+                   @* <label for="Name" class="col-form-label full-width justify-content-center" style="text-align:center">Pregunta</label>*@
+                    @* <label for="Name" class="col-form-label">Nombre</label>*@
+                    <div class="invalid-feedback">
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <table id="cliente-data-table" class="table justify-content-center">
+                        <thead>
+                            <tr>
+                                <td class="secondary-text justify-content-center" align="center" valign="middle">
+                                    <div class="table-header justify-content-center" style="font-size:25px;">
+                                        <span class="column-title justify-content-lg-start">Respuestas</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var item in Model.RespuestaDisponibles)
+                            {
+                                <tr>
+
+                                    @*<td>
+                                <input readonly style="background-color :@(item.Color) " />
+                            </td>*@
+
+                                    <td align="center">
+                                        <a id=@(item.Id) name=@(item.Id) class="btn btn-block btnRespuesta" aria-label="Play" data-toggle="tooltip" data-placement="top" data-original-title="Play">
+                                            @(item.Nombre)
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            setTimeout(
+                function () {
+                    //do something special
+                }, 5000);
+            $(".btnRespuesta").click(function () {
+
+                var id = $(this).attr('id');
+                var model = {
+                    Nombre: $("#Nombre").val(),
+                    RespSeleccionada: id,
+                    catId: '@Model.catId',
+                    PregId: '@Model.PregId',
+                    RespuestaDisponibles: '@Model.RespuestaDisponibles',
+                    UserId: '@Model.UserId'
+                };
+        //          public Guid catId { get; set; }
+        //public Guid PregId { get; set; }
+        //public List< JuegoRespuestaViewModel > RespuestaDisponibles {get; set;}
+                 $.ajax({
+                        type: "POST",
+                         url: '@Url.Action("saveGame", "Jugar")',
+                         data: { Id: null, model: model },
+                        success: function (data) {
+                            console.log(data);
+
+                            if (data.Id == id) {
+                                //$("#" + id).css("background-color", "Green");
+                                $("#" + id).addClass("btn-success")
+                                 window.setTimeout(30000)
+                                 window.location.href = '@Url.Action("Play", "Jugar")';
+                                ////window.location.href = '@Url.Action("Play", "Jugar")';
+                            }
+                            else
+                            {
+                                $(".btnRespuesta").off();
+
+                               // $("#" + id).css("background-color", "Red");
+                                $("#" + id).addClass("btn-danger")
+
+                                $("#" + data.Id).addClass("btn-success")
+
+                                window.setTimeout( 30000)
+                                 window.location.href = '@Url.Action("Play", "Jugar")';
+                            }
+                            //else {
+                            //    var html = '<ul>';
+                            //    for (i = 0; i < data.Error.length; i++) {
+                            //        html += '<li>' + data.Error[i] + '</li>'
+                            //    }
+                            //    html += '</ul>'
+                            //    $("#errorDiv").html(html);
+                            //    $("#errorDiv").fadeIn();
+
+                            //}
+                        }
+                    });
+
+            });
+    });
+</script>
+}

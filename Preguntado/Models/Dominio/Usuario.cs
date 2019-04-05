@@ -16,11 +16,12 @@ namespace Preguntado.Models.Dominio
             var user = new ApplicationUser { UserName = vmodel.Email, Email = vmodel.Email };
             NickName = vmodel.NickName;
             Nombre = vmodel.Nombre;
-
             ApplicationUser = user;
         }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public string NickName { get; set; }
+        public string Token { get; set; }
+        public virtual ICollection<Localizacion> Localizaciones { set; get; }
         public void Modificar(ViewModelAbmUsuario model, ApplicationDbContext db)
         {
             Nombre = model.Nombre;

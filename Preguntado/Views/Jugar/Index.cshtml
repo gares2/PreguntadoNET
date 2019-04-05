@@ -1,0 +1,89 @@
+﻿@model List<Preguntado.Models.ViewModel.Jugar.JugarCategoriaViewModel>
+
+@{
+    ViewBag.Title = "Listado de Peliculas";
+}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<link href="~/Scripts/Animate.css" rel="stylesheet" />
+
+
+<div class="page-layout carded full-width single-scroll">
+
+    <div class="top-bg bg-deep-purple-100 "></div>
+
+    <!-- CONTENT -->
+    <div class="page-content-wrapper">
+
+        <!-- HEADER -->
+        <div class="page-header light-fg row no-gutters align-items-center justify-content-between">
+
+            <!-- APP TITLE -->
+            <div class="col-12 col-sm">
+
+                <div class="logo row no-gutters justify-content-center align-items-start justify-content-sm-start">
+
+                    <div class="logo-text">
+                        <div class="h4">Listado de Categoria</div>
+                    </div>
+                </div>
+            </div>
+            <!-- SEARCH -->
+            <div class="col search-wrapper px-2">
+
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-icon">
+                            <i class="icon icon-magnify"></i>
+                        </button>
+                    </span>
+                    <input id="cliente-search-input" type="text" class="form-control" placeholder="Buscar" aria-label="Search" />
+                </div>
+
+
+                <!-- / SEARCH -->
+
+            </div>
+          
+
+        </div>
+        <!-- / HEADER -->
+
+        <div class="page-content-card p-10">
+
+            <table id="cliente-data-table" class="table">
+                <thead>
+                    <tr>
+                        <td class="secondary-text justify-content-center tada" align="center" valign="middle">
+                            <div  class="table-header justify-content-center" style="font-size:25px;">
+                                <span class="column-title justify-content-center"   >CATEGORIA</span>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            
+                            @*<td>
+                                <input readonly style="background-color :@(item.Color) " />
+                            </td>*@
+                            
+                            <td class="tada" align="center">
+                                <a   style="background-color :@(item.color) " href="@Url.Action("play", "Jugar", new { id = item.Id})"  class="btn btn-block animated tada" aria-label="Play" data-toggle="tooltip" data-placement="top" data-original-title="Play">
+                                   @(item.Nombre)
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+

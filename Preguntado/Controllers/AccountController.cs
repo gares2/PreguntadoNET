@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using Preguntado.Models;
 using Preguntado.Models.Dominio;
 using Preguntado.Models.Enums;
+using Preguntado.Models.ViewModel;
+using System.Collections.Generic;
 
 namespace Preguntado.Controllers
 {
@@ -93,6 +95,55 @@ namespace Preguntado.Controllers
             }
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+      
+        public async Task<ActionResult> LoginMobile(LoginMobileViewModel model)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
+            var errores = new List<string>();
+           // errores = ModelState.Values.SelectMany(x => x.Errors.Select(t => t.ErrorMessage)).ToList();
+            if (string.IsNullOrEmpty(model.user))
+                errores.Add("Debe completar el Nombre");
+            if (string.IsNullOrEmpty(model.password))
+                errores.Add("Debe completar el Password");
+            if (errores.Count > 0)
+            {
+                return Json(new { Result = "", Error = errores }, JsonRequestBehavior.AllowGet);
+            }
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.user, model.password, true , shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    {
+                        var db = new ApplicationDbContext();
+                     Usuario usu =   new Repositorio<Usuario>(db).TraerTodos().Where(x=> x.ApplicationUser.Email==model.user).FirstOrDefault();
+                        model.Id = new Guid (usu.ApplicationUser.Id);
+                        model.NickName = usu.NickName;
+                        model.token = Guid.NewGuid().ToString();
+                        usu.Token = model.token;
+                        new Repositorio<Usuario>(db).Modificar(usu);
+
+                        return Json(new { Result = model, Error = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                case SignInStatus.LockedOut:
+                    errores.Add("Invalid login attempt.");
+                    return Json(new { Result = "", Error = errores }, JsonRequestBehavior.AllowGet);
+                //case SignInStatus.RequiresVerification:
+                //    return RedirectToAction("SendCode", new { ReturnUrl = "", RememberMe = true });
+                case SignInStatus.Failure:
+                default:
+                    errores.Add("Invalid login attempt.");
+                    return Json(new { Result = "", Error = errores }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -165,7 +216,7 @@ namespace Preguntado.Controllers
 
                 UserManager.AddPassword(usuario.ApplicationUser.Id, model.Password);
 
-                UserManager.AddToRole(user.Id, RoleConst.Administrador);
+                UserManager.AddToRole(user.Id, RoleConst.Suscriptor);
 
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
@@ -173,7 +224,46 @@ namespace Preguntado.Controllers
             }
             return View(model);
         }
+        // POST: /Account/Register
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> RegisterMobile(RegistrarViewModelMobile model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
+                var usuario = new Usuario()
+                {
+                    ApplicationUser = user,
+                    NickName = model.NickName,
+                    Token = Guid.NewGuid().ToString()
+            };
+                var db = new ApplicationDbContext();
+
+                new Repositorio<Usuario>(db).Crear(usuario);
+
+                UserManager.AddPassword(usuario.ApplicationUser.Id, model.Password);
+
+                UserManager.AddToRole(user.Id, RoleConst.Suscriptor);
+                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                //Usuario usu = new Repositorio<Usuario>(db).TraerTodos().Where(x => x.ApplicationUser.Email == model.Email).FirstOrDefault();
+                model.Id = usuario.ApplicationUser.Id;
+                model.NickName = usuario.NickName;
+                model.Token = usuario.Token;
+                //usu.Token = model.Token;
+                //new Repositorio<Usuario>(db).Modificar(usu);
+                return Json(new { Result = model, Error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var errores = new List<string>();
+                errores = ModelState.Values.SelectMany(x => x.Errors.Select(t => t.ErrorMessage)).ToList();
+                return Json(new { Result = "", Error = errores }, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -394,7 +484,7 @@ namespace Preguntado.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

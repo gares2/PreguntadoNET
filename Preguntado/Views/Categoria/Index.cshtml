@@ -120,41 +120,49 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            function deleteClicks() {
+                $(".delete-action").click(function () {
+                    var id = $(this).attr("id")
+                    var name = "noOk";
 
-            $(".delete-action").click(function () {
-                var id = $(this).attr("id")
-                var name = "noOk";
+                    console.log(id);
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this imaginary file!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((willDelete) => {
+                            if (willDelete) {
 
-                console.log(id);
-                swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this imaginary file!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                    .then((willDelete) => {
-                        if (willDelete) {
-
-                            $.ajax({
-                                type: "POST",
-                                url: '@Url.Action("Delete", "Categoria")',
-                            data: { Id: id },
-                                success: function (data) {
-                                    window.location.href = '@Url.Action("Index", "Categoria")';
-                                    //window.location.reload();
+                                $.ajax({
+                                    type: "POST",
+                                    url: '@Url.Action("Delete", "Categoria")',
+                                    data: { Id: id },
+                                    success: function (data) {
+                                        window.location.href = '@Url.Action("Index", "Categoria")';
+                                        //window.location.reload();
+                                    }
+                                })
+                                swal("Poof! Your imaginary file has been deleted!", {
+                                    icon: "success",
+                                });
+                            } else {
+                                swal("Your imaginary file is safe!");
                             }
-                            })
-                            swal("Poof! Your imaginary file has been deleted!", {
-                                icon: "success",
-                            });
-                        } else {
-                            swal("Your imaginary file is safe!");
-                        }
-                    });
+                        });
 
-     });
-
+                });
+            }
+            $('#cliente-data-table').DataTable(
+                {
+                    "drawCallback": function (settings) {
+                        console.log("draw");
+                        deleteClicks();
+                    }
+                }
+            );
         });
     </script>
     @*<script src="~/Scripts/DataTableInitiator.js"></script>

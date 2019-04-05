@@ -40,14 +40,14 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 form-group">
-                    <label for="Name" class="col-form-label">Categoria</label>
-                    <select id="CategoriaSeleccionada" name="CategoriaSeleccionada">
-                        <option value="@Guid.Empty">-</option>
-                        @foreach (var catego in Model.CategoriasDisponibles)
+                <div class="col-md-6 form-group" style="z-index:1" >
+                    @*<label for="Name" class="col-form-label">Categoria</label>*@
+                    <select class="chosen-select"  id="CategoriaSeleccionada" name="CategoriaSeleccionada">
+                        <option value="@Guid.Empty">Seleccionar Categoria</option>
+                        @*@foreach (var catego in Model.CategoriasDisponibles)
                         {
                             <option @(catego.Id == Model.CategoriaSeleccionada ? "selected" : "") value="@catego.Id">@catego.Nombre</option>
-                        }
+                        }*@
                     </select>
                     @*<div class="invalid-feedback">
                             @Html.ValidationMessageFor(m => m.FechaNacimiento, "", new { @class = "text-danger" })
@@ -118,6 +118,8 @@
 
         $(document).ready(function () {
             var Respuestas = [];
+            var Categorias = [];
+
             var idNac = 1;
             var id = '@Model.Id'; 
             var correcta;
@@ -125,7 +127,8 @@
             var Pregunta = {
                 Nombre: $("#Nombre").val(),
                 categoriaSeleccionado: $("#CategoriaSeleccionado").val(),
-                ActoresSeleccionadas: Respuestas
+                ActoresSeleccionadas: Respuestas,
+                CategoriasDisponibles: Categorias
             }
 
             $.ajax({
@@ -137,14 +140,17 @@
 
                                 $("#Nombre").val(data.model.Nombre);
 
-                                for (j = 0; j < data.model.CategoriaSeleccionada.length; j++){
-                                    if (data.model.CategoriaSeleccionada[j].Id == data.model.CategoriaSeleccionada)
-                                        $("#CategoriaSeleccionada").append("<option selected=" + "selected" + " value=" + data.model.CategoriaSeleccionada + ">" + data.model.CategoriaSeleccionada[j].Nombre + "</option>");
+                                for (j = 0; j < data.model.CategoriasDisponibles.length; j++){
+                                    if (data.model.CategoriasDisponibles[j].Id == data.model.CategoriaSeleccionada)
+                                        $("#CategoriaSeleccionada").append("<option selected=" + "selected" + " value=" + data.model.CategoriaSeleccionada + ">" + data.model.CategoriasDisponibles[j].Nombre + "</option>");
                                     else
-                                        $("#CategoriaSeleccionada").append("<option value=" + data.model.CategoriaSeleccionada[j].Id + ">" + data.model.CategoriaSeleccionada[j].Nombre  + "</option>");
+                                        $("#CategoriaSeleccionada").append("<option value=" + data.model.CategoriasDisponibles[j].Id + ">" + data.model.CategoriasDisponibles[j].Nombre  + "</option>");
                                 }
+                                $("#CategoriaSeleccionada").trigger("chosen:updated");
+
                                 Respuestas = data.model.RespuestasSeleccionadas;
                                 Pregunta.CategoriaSeleccionada = data.model.CategoriaSeleccionada;
+                                Pregunta.CategoriasDisponibles = data.model.CategoriasDisponibles;
 
                                 for (j = 0; j < data.model.RespuestasSeleccionadas.length; j++) {
 

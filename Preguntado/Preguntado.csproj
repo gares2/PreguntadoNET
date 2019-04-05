@@ -18,7 +18,7 @@
     <AssemblyName>Preguntado</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -195,31 +195,40 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CategoriaController.cs" />
+    <Compile Include="Controllers\OneSignalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JugarController.cs" />
+    <Compile Include="Controllers\JugarMobileController.cs" />
+    <Compile Include="Controllers\LocalizacionController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PRController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\LoggerEventos.cs" />
     <Compile Include="Helper\SequentialGuidGenerator.cs" />
-    <Compile Include="Migrations\201902081325150_test1.cs" />
-    <Compile Include="Migrations\201902081325150_test1.Designer.cs">
-      <DependentUpon>201902081325150_test1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902111650002_PR.cs" />
-    <Compile Include="Migrations\201902111650002_PR.Designer.cs">
-      <DependentUpon>201902111650002_PR.cs</DependentUpon>
+    <Compile Include="Migrations\201903272149414_fix_migrations.cs" />
+    <Compile Include="Migrations\201903272149414_fix_migrations.Designer.cs">
+      <DependentUpon>201903272149414_fix_migrations.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\PushNotification.cs" />
     <Compile Include="Models\Dominio\Categoria.cs" />
+    <Compile Include="Models\Dominio\Localizacion.cs" />
+    <Compile Include="Models\Dominio\LogEvento.cs" />
     <Compile Include="Models\Dominio\Entidad.cs" />
+    <Compile Include="Models\Dominio\JuegoHistory.cs" />
     <Compile Include="Models\Dominio\Pregunta.cs" />
     <Compile Include="Models\Dominio\Respuesta.cs" />
     <Compile Include="Models\Dominio\Usuario.cs" />
+    <Compile Include="Models\Enums\AccionesLogEnum.cs" />
     <Compile Include="Models\Enums\Colores.cs" />
+    <Compile Include="Models\Enums\EntidadLogEnum.cs" />
     <Compile Include="Models\Enums\RoleConst.cs" />
     <Compile Include="Models\General\EntidadViewModel.cs" />
     <Compile Include="Models\General\SelectBoxItemViewModel.cs" />
@@ -227,10 +236,23 @@
     <Compile Include="Models\Interface\IEntidad.cs" />
     <Compile Include="Models\Interface\IRepositorio.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\OneSignal\NotificationDTO.cs" />
+    <Compile Include="Models\OneSignal\ToPlayersNotificationDTO.cs" />
+    <Compile Include="Models\OneSignal\ToSegmentsNotificationDTO.cs" />
     <Compile Include="Models\Repositorio.cs" />
     <Compile Include="Models\Validations\ListHasElements.cs" />
+    <Compile Include="Models\ViewModel\Api\ApiCategorias.cs" />
+    <Compile Include="Models\ViewModel\Api\ApiCategoriaResult.cs" />
+    <Compile Include="Models\ViewModel\Api\ApiCategoriasElement.cs" />
     <Compile Include="Models\ViewModel\categoria\ViewModelABMCategoria.cs" />
     <Compile Include="Models\ViewModel\categoria\ViewModelGrillaCategoria.cs" />
+    <Compile Include="Models\ViewModel\Jugar\JuegoPRViewModel.cs" />
+    <Compile Include="Models\ViewModel\Jugar\JuegoRespuestaViewModel.cs" />
+    <Compile Include="Models\ViewModel\Jugar\JugarCategoriaViewModel.cs" />
+    <Compile Include="Models\ViewModel\Localizacion\LocalizacionDetails.cs" />
+    <Compile Include="Models\ViewModel\Localizacion\LocalizacionViewModel.cs" />
+    <Compile Include="Models\ViewModel\LoginMobileViewModel.cs" />
+    <Compile Include="Models\ViewModel\RegistrarViewModelMobile.cs" />
     <Compile Include="Models\ViewModel\RP\FiltroRPViewModel.cs" />
     <Compile Include="Models\ViewModel\RP\ViewModelRP.cs" />
     <Compile Include="Models\ViewModel\RP\ViewModelRPGrilla.cs" />
@@ -8074,6 +8096,9 @@
     <Content Include="Views\PR\Create.cshtml" />
     <Content Include="Views\PR\Index.cshtml" />
     <Content Include="Views\PR\Edit.cshtml" />
+    <Content Include="Views\Jugar\Index.cshtml" />
+    <Content Include="Views\Jugar\Play.cshtml" />
+    <Content Include="Views\Jugar\Result.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -8117,6 +8142,11 @@
     <Folder Include="assets\Highcharts\gfx\" />
     <Folder Include="assets\Highcharts\graphics\" />
     <Folder Include="assets\SdP\js\" />
+    <Folder Include="Views\Api\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\Default\" />
+    <Folder Include="Views\JugarMobile\" />
+    <Folder Include="Views\Localizacion\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -8143,11 +8173,8 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201902081325150_test1.resx">
-      <DependentUpon>201902081325150_test1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902111650002_PR.resx">
-      <DependentUpon>201902111650002_PR.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903272149414_fix_migrations.resx">
+      <DependentUpon>201903272149414_fix_migrations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -8172,13 +8199,13 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56782</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56782/</IISUrl>
+          <IISUrl>http://localhost/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-          <servers defaultServer="SelfHostServer">
+          <servers defaultServer="">
             <server name="SelfHostServer" exePath="" cmdArgs="" url="http://localhost:56782/" workingDir="" />
           </servers>
         </WebProjectProperties>

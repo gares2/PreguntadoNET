@@ -30,7 +30,7 @@ namespace Preguntado.Models.ViewModel
         [Display(Name = "NickName")]
         public string NickName { get; set; }
         public List<SelectBoxItemViewModel> RolesDisponibles { get; set; }
-        
+        public List<string> Errors { get; set; }
         public List<Guid> RolesSeleccionadas { get; set; }
         //[Required(ErrorMessage = "An Album Title is required")]
         [ListHasElements(ErrorMessage = "List must contain an element")]
@@ -39,6 +39,7 @@ namespace Preguntado.Models.ViewModel
         {
             RolesDisponibles = new List<SelectBoxItemViewModel>();
             RolesSeleccionadas = new List<Guid>();
+            Errors = new List<string>();
             Password = "123456";
             ConfirmPassword = "123456";
             LlenarListas();
@@ -49,8 +50,10 @@ namespace Preguntado.Models.ViewModel
             Nombre = usu.Nombre;
             NickName = usu.NickName;
             Email = usu.ApplicationUser.Email;
+            Errors = new List<string>();
             //Password = usu.ApplicationUser.PasswordHash;
             RolesDisponibles = new List<SelectBoxItemViewModel>();
+            Errors = new List<string>();
             LlenarListas();
             RolesSeleccionadas = usu.ApplicationUser.Roles.Select(x => new Guid(x.RoleId)).ToList();
             ////////////Password = "123456";
